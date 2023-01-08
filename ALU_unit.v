@@ -3,7 +3,7 @@ module ALU_unit(
  input  [15:0] b,
  input  [5:0] opcode, 
  
- output reg [15:0] result,
+ output reg [16:0] result,
  output ZF,
  output reg CF,
  output reg NF, 
@@ -13,26 +13,49 @@ module ALU_unit(
 always @(*)
 begin 
  case(opcode)
- 6'b001001: result = a + b; // add
- 6'b001010: result = a - b; // sub
+ 6'b001001: begin
+            result = a + b; // add
+            CF = result[16];
+            OF = (a[15] == b[15]) && (a[15] != result[15]);
+            NF = 1'b0;
+          end
+ 6'b001010: begin
+            result = a - b; // sub
+            CF = !result[16];
+            OF = 1'b0;
+            NF = result[15];
+          end
  6'b001011: begin
-                CF = 0;
+                CF = a[b-1];
+                OF = 1'b0;
+                NF = 1'b0;
                 result = a>>b;
             end
  6'b001100: begin
-                CF = 0;
                 result = a<<b;
+                CF = result[16];
+                OF = 1'b0;
+                NF = 1'b0;
             end
  6'b001101: begin
-					      CF = 0;
+					      CF = a[b-1];
+					      OF = 1'b0;
+                NF = 1'b0;
 					      result = b ? (( a >> b ) | ( a << ( 16 - b ))) : a;
 				    end 
  6'b001110: begin
-					      CF = 0;
 					      result = b ? (( a << b ) | ( a >> ( 16 - b ))) : a;
+					      CF = result[16];
+					      OF = 1'b0;
+                NF = 1'b0;
 				    end
  6'b001111: result = a; // ?move
- 6'b010000: result = a * b; 
+ 6'b010000: begin
+            result = a * b;
+            if (result > 16'hFFFF)
+              CF = 1'b1;
+            OF = (a[15] == b[15]) && (a[15] != result[15]);
+            end
  6'b010001: result = a / b;
  6'b010010: result = a % b;
  6'b010011: result = a & b;
@@ -41,28 +64,27 @@ begin
  6'b010110: result = ~a ;
  6'b010111: begin if (a<b || b>a) result = 16'd1; //CMP
     else result = 16'd0;
-
+      if(a<b) NF = 1'b1;
     end
  6'b011000: begin if (a<b) result = b; //TST
     else result = a;
     end
- 6'b011001: result = a + 1;
- 6'b011010: result = a - 1;
+ 6'b011001: begin
+            result = a + 1;
+            CF = result[16];
+            OF = 1'b0;
+            NF = 1'b0;
+          end
+ 6'b011010: begin
+            result = a - 1;
+            CF = !result[16];
+            NF = result[15];
+            OF = 1'b0;
+          end
  default result = 16'h0000;
  endcase
 end
 assign ZF = (result==16'd0) ? 1'b1: 1'b0;
-initial begin if ((result<0 && a>0 && b>0) || (result>0 && a<0 && b<0 ) ) OF=2'b01;
-    else OF= 2'b00;
-    end
-initial begin if (result==16'd0 || (result==16'd1 && a<0 && b>0)) NF=1; CF=1;
-end
-initial begin if(result==16'd1 && a<b) NF=1;
-end
-initial begin if(result==16'd1 && a>b) CF=1;
-    else NF=0; CF=0;
-    end
-//NF = result[15];
 endmodule
 
 
@@ -113,5 +135,12 @@ begin
   #5 opcode = 6'b011000;
   #5 opcode = 6'b011001;
   #5 opcode = 6'b011010;
+  
+  #5 a = 16'h7FFF;
+	   b = 16'h8001;
+	
+	#5 opcode = 6'b001001;
+	#5 opcode = 6'b001010;
+	#5 opcode = 6'b001010;
 end
 endmodule

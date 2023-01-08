@@ -9,7 +9,7 @@ always@(clk) begin
 if(reset)
   acc <= 16'b0000000000000000;
 else
-    acc <= acc + in;
+    acc <= in;
 end
 endmodule
 
