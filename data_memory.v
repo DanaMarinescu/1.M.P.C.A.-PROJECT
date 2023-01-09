@@ -1,7 +1,25 @@
-//////////////////////////////////////////////////////////////////////
-//	Program to realise Datamemory in the CPU		/////
-////////////////////////////////////////////////////////////////////
+`timescale 1ns / 1ns
+module datamem(
+input we_DM,
+  input [15:0] dataDM,
+  input [15:0] addrDM,
+  output reg[15:0] outDM);
+  
+  reg [15:0] mem [0 : 1023];
 
+  always@(posedge dataDM, posedge addrDM, posedge we_DM)
+begin
+  
+  if (we_DM == 1) begin
+    mem[addrDM] <= dataDM;
+	end
+	 else if (we_DM == 0) begin
+      outDM <= mem[addrDM];
+	end
+end
+endmodule
+
+/* // old code
 module datamem(clk, we_DM, dataDM, addDM, outDM);
 input clk;
 input we_DM;
@@ -36,36 +54,25 @@ begin
 	end
 end
 endmodule
-
-////////////////////////////////////////////////////////////////////////
-//	Test bench for the data memory design used		///////
-//////////////////////////////////////////////////////////////////////
+*/
 module tb_datamem();
-reg clk;
 reg we_DM;
 reg [15:0] dataDM;
-reg [15:0] addDM;
+reg [15:0] addrDM;
 wire [15:0] outDM;
 
-// Instantiation of the design
-datamem d1 (.clk(clk), .we_DM(we_DM), .dataDM(dataDM), .addDM(addDM), .outDM(outDM));
 
-// Initialization of signals
+datamem d1 (.we_DM(we_DM), .dataDM(dataDM), .addrDM(addrDM), .outDM(outDM));
+
 initial
 begin
 	clk <= 0;
 	we_DM <= 0;
 	dataDM <= 16'h00000000;
-	addDM <= 16'h000;
+	addrDM <= 16'h000;
 end
-
-// Clock setup
 always #5 clk = ~clk;
-
-// Address setup 
 always #60 addDM = addDM + 16'h001;
-
-// Stimulus
 initial 
 begin
 	#5 we_DM <= 1;
@@ -80,7 +87,5 @@ begin
 	#20 we_DM <= 1;
 	#4 dataDM <= 16'ha001;
 	#20 we_DM <= 0;
-	
-
 end
 endmodule
