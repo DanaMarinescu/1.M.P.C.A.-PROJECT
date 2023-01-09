@@ -13,49 +13,50 @@ module CU
     end
       
       case(opCode)
-        //load
+        
+        //brz
         6'b000000:begin
+          control_signals <= 8'b11000000;
+        end
+        
+        //brn
+        6'b000001:begin
+          control_signals <= 8'b11000000;
+        end
+        
+        //brc
+        6'b000010:begin
+          control_signals <= 8'b11000000;
+        end
+        
+        //bro
+        6'b000011:begin
+          control_signals <= 8'b11000000;
+        end
+        
+        //load
+        6'b000100:begin
           control_signals <= 8'b11011000;
         end
         
         //store
-        6'b000001:begin
-          control_signals <= 8'b10000000;
-        end
-        
-        //brz
-        6'b000010:begin
-          control_signals <= 8'b01000000;
-        end
-        
-        //brn
-        6'b000011:begin
-          control_signals <= 8'b01000000;
-        end
-        
-        //brc
-        6'b000100:begin
-          control_signals <= 8'b01000000;
-        end
-        
-        //bro
         6'b000101:begin
-          control_signals <= 8'b01000000;
+          control_signals <= 8'b10000000;
         end
         
         //bra
         6'b000110:begin
-          control_signals <= 8'b01000010;
+          control_signals <= 8'b11000010;
         end
         
         //jmp
         6'b000111:begin
-          control_signals <= 8'b01000010;
+          control_signals <= 8'b11000011;
         end
         
         //ret
         6'b001000:begin
-          control_signals <= 8'b01000010;
+          control_signals <= 8'b11000011;
         end
         
         //add
@@ -90,7 +91,7 @@ module CU
         
         //mov
         6'b001111:begin
-          control_signals <= 8'b00000000;
+          control_signals <= 8'b10010000;
         end
         
         //mul
@@ -156,3 +157,4 @@ module CU
   end
 
 endmodule
+
