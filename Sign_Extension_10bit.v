@@ -1,6 +1,6 @@
 `timescale 1ns / 1ns
 
-module program_counter(
+module Sign_Extension_10bit(
   input clk,
   input [9:0]data_in,
   output reg [15:0] data_out
