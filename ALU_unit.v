@@ -12,6 +12,9 @@ module ALU_unit(
 
 always @(*)
 begin 
+  CF = 1'b0;
+  NF = 1'b0;
+  OF = 1'b0;
  case(opcode)
  6'b001001: begin
             result = a + b; // add
@@ -61,7 +64,10 @@ begin
  6'b010011: result = a & b;
  6'b010100: result = a | b;
  6'b010101: result = a ^ b;
- 6'b010110: result = ~a ;
+ 6'b010110: begin
+            result = ~a + 1 ;
+            NF = 1'b1;
+            end
  6'b010111: begin if (a<b || b>a) result = 16'd1; //CMP
     else result = 16'd0;
       if(a<b) NF = 1'b1;
@@ -136,11 +142,5 @@ begin
   #5 opcode = 6'b011001;
   #5 opcode = 6'b011010;
   
-  #5 a = 16'h7FFF;
-	   b = 16'h8001;
-	
-	#5 opcode = 6'b001001;
-	#5 opcode = 6'b001010;
-	#5 opcode = 6'b001010;
 end
 endmodule
