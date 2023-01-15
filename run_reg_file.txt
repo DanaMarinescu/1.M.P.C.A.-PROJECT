@@ -2,7 +2,7 @@
 # add the files separated by spaces
 # Example:-----------------------------------------
 # set sourcefiles {mux_1s.v mux_2s.v mux2s_tb.v}
-set sourcefiles {reg_file.v reg_file_tb.v}
+set sourcefiles {reg_file.v}
 
 # set name of the top module in variable topmodule
 # Example:-----------------------------------------
