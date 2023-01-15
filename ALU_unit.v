@@ -12,6 +12,9 @@ module ALU_unit(
 
 always @(*)
 begin 
+  CF = 1'b0;
+  NF = 1'b0;
+  OF = 1'b0;
  case(opcode)
  6'b001001: begin
             result = a + b; // add
@@ -25,43 +28,46 @@ begin
             OF = 1'b0;
             NF = result[15];
           end
- 6'b001011: begin
+ 6'b001011: begin //LSR
                 CF = a[b-1];
                 OF = 1'b0;
                 NF = 1'b0;
                 result = a>>b;
             end
- 6'b001100: begin
+ 6'b001100: begin //LSL
                 result = a<<b;
                 CF = result[16];
                 OF = 1'b0;
                 NF = 1'b0;
             end
- 6'b001101: begin
+ 6'b001101: begin //RSR
 					      CF = a[b-1];
 					      OF = 1'b0;
                 NF = 1'b0;
 					      result = b ? (( a >> b ) | ( a << ( 16 - b ))) : a;
 				    end 
- 6'b001110: begin
+ 6'b001110: begin //RSL
 					      result = b ? (( a << b ) | ( a >> ( 16 - b ))) : a;
 					      CF = result[16];
 					      OF = 1'b0;
                 NF = 1'b0;
 				    end
- 6'b001111: result = a; // ?move
- 6'b010000: begin
+ 6'b001111: result = a; // MOV
+ 6'b010000: begin //MUL
             result = a * b;
             if (result > 16'hFFFF)
               CF = 1'b1;
             OF = (a[15] == b[15]) && (a[15] != result[15]);
             end
- 6'b010001: result = a / b;
- 6'b010010: result = a % b;
- 6'b010011: result = a & b;
- 6'b010100: result = a | b;
- 6'b010101: result = a ^ b;
- 6'b010110: result = ~a ;
+ 6'b010001: result = a / b; //DIV
+ 6'b010010: result = a % b; //MOD
+ 6'b010011: result = a & b; //AND
+ 6'b010100: result = a | b; //OR
+ 6'b010101: result = a ^ b; //XOR
+ 6'b010110: begin //NOT
+            result = ~a + 1 ;
+            NF = 1'b1;
+            end
  6'b010111: begin if (a<b || b>a) result = 16'd1; //CMP
     else result = 16'd0;
       if(a<b) NF = 1'b1;
@@ -69,13 +75,13 @@ begin
  6'b011000: begin if (a<b) result = b; //TST
     else result = a;
     end
- 6'b011001: begin
+ 6'b011001: begin //INC
             result = a + 1;
             CF = result[16];
             OF = 1'b0;
             NF = 1'b0;
           end
- 6'b011010: begin
+ 6'b011010: begin //DEC
             result = a - 1;
             CF = !result[16];
             NF = result[15];
@@ -136,11 +142,5 @@ begin
   #5 opcode = 6'b011001;
   #5 opcode = 6'b011010;
   
-  #5 a = 16'h7FFF;
-	   b = 16'h8001;
-	
-	#5 opcode = 6'b001001;
-	#5 opcode = 6'b001010;
-	#5 opcode = 6'b001010;
 end
 endmodule
