@@ -7,7 +7,7 @@ input we_DM,
   
   reg [15:0] mem [0 : 1023];
 
-  always@(posedge dataDM, posedge addrDM, posedge we_DM)
+  always@(posedge dataDM, posedge addrDM,posedge we_DM,negedge we_DM)
 begin
   
   if (we_DM == 1) begin
