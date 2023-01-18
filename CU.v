@@ -36,7 +36,7 @@ module CU
         
         //load
         6'b000100:begin
-          control_signals <= 8'b11011000;
+          control_signals <= 8'b11001000;
         end
         
         //store

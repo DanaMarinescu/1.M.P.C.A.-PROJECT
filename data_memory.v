@@ -1,5 +1,5 @@
 `timescale 1ns / 1ns
-module datamem(
+module data_memory(
 input we_DM,
   input [15:0] dataDM,
   input [15:0] addrDM,
@@ -55,7 +55,7 @@ begin
 end
 endmodule
 */
-module tb_datamem();
+/*module tb_datamem();
 reg we_DM;
 reg [15:0] dataDM;
 reg [15:0] addrDM;
@@ -88,4 +88,4 @@ begin
 	#4 dataDM <= 16'ha001;
 	#20 we_DM <= 0;
 end
-endmodule
+endmodule*/

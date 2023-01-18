@@ -1,24 +1,27 @@
-module Stack_pointer( clk, loadSP, insp, address);
-input clk;
-input loadSP;
-input [15:0] insp;
-output [15:0] address;
+module Stack_pointer(
+input enable,
+input [5:0] opcode,
+input [15:0] pc,
+output reg [15:0] sp_out
+);
 
-reg [15:0] address;
-reg [15:0] temp;
+reg [5:0]sp_reg;
 
-always@(posedge clk)
-begin
-	if(loadSP == 1) begin
-	temp <= insp;
-	end
-address <= temp[15:0];
+always @ (*)begin
+  if(enable)begin
+    if(opcode&&6'b000101)begin //store
+     sp_reg<=pc;
+    end else if(opcode&&6'b000100)begin //load
+              sp_out<= sp_reg;
+             end
+  end
 end
 endmodule
 
 
-/*****Stack_pointer_tb*****/
 
+/*****Stack_pointer_tb*****/
+/*
 module Stack_pointer_tb;
 reg clk, loadSP;
 reg [15:0] insp;
@@ -56,3 +59,4 @@ initial begin
   
 end
 endmodule
+*/

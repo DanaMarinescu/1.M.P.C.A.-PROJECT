@@ -4,14 +4,17 @@ module ALU_unit(
  input  [5:0] opcode, 
  
  output reg [16:0] result,
- output ZF,
+ output reg ZF,
  output reg CF,
  output reg NF, 
- output reg OF
+ output reg OF,
+ input aluOp
     );
 
 always @(*)
 begin 
+  if(aluOp) begin
+    
   CF = 1'b0;
   NF = 1'b0;
   OF = 1'b0;
@@ -89,12 +92,14 @@ begin
           end
  default result = 16'h0000;
  endcase
+ ZF = (result==16'd0) ? 1'b1: 1'b0;
+ end
 end
-assign ZF = (result==16'd0) ? 1'b1: 1'b0;
+
 endmodule
 
 
-
+/*
 module ALU_unit_tb();
 reg [15:0] a;
 reg [15:0] b;
@@ -143,4 +148,4 @@ begin
   #5 opcode = 6'b011010;
   
 end
-endmodule
+endmodule*/

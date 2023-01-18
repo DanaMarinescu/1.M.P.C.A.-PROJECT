@@ -1,18 +1,15 @@
-module acc(in, acc, clk, reset);
+module acc(in, acc);
 input [15:0] in;
-input clk, reset;
 output [15:0] acc;
+reg [15:0] acc_reg;
 
-reg [15:0] acc;
-
-always@(clk) begin
-if(reset)
-  acc <= 16'b0000000000000000;
-else
-    acc <= in;
+assign acc=acc_reg;
+always @ (in)begin
+  acc_reg<=in;
 end
 endmodule
 
+/*
 module acc_tb;
 reg [15:0] in;
 reg clk;
@@ -32,3 +29,4 @@ end
   always #10 clk = ~clk;
   initial#180 $stop;
 endmodule
+*/

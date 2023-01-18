@@ -19,7 +19,7 @@ endmodule
 
 
 /*****Sign_Extension_10bit_tb*****/
-
+/*
 module Sign_Extension_10bit_tb;
 reg clk;
 reg [9:0]data_in;
@@ -63,4 +63,4 @@ initial begin
   #100
   data_in = 10'b0001100010;
 end
-endmodule
+endmodule*/

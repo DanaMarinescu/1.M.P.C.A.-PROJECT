@@ -2,12 +2,12 @@
 # add the files separated by spaces
 # Example:-----------------------------------------
 # set sourcefiles {mux_1s.v mux_2s.v mux2s_tb.v}
-set sourcefiles {mux.v mux_tb.v}
+set sourcefiles {Processor_tb.v ALU_unit.v AR.v CU.v IR.v PC_adder.v Sign_Extension_10bit.v Sign_Extension_9bit.v Stack_pointer.v acc.v data_memory.v instruction_memory.v program_counter.v reg_file.v demux.v mux.v flags_register.v mux2to1.v}
 
 # set name of the top module in variable topmodule
 # Example:-----------------------------------------
 # set topmodule mux2s_tb
-set topmodule mux_tb
+set topmodule Processor_tb
 
 ###################################################
 #####DO NOT MODIFY THE SCRIPT BELLOW THIS LINE#####

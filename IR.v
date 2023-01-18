@@ -1,22 +1,17 @@
-module IR( clk, loadIR, inop, opcode);
-input clk;
-input loadIR;
+module IR(inop, opcode);
+  
 input [5:0] inop;
 output [5:0] opcode;
+reg [5:0]IR_reg;
 
-reg [5:0] opcode;
-reg [5:0] temp;
-
-always@(posedge clk)
-begin
-	if(loadIR == 1) begin
-	temp <= inop;
-	end
-opcode <= temp[5:0];
+assign opcode=IR_reg;
+always @ (inop)begin
+  IR_reg<=inop;
 end
+
 endmodule
 
-module IR_tb();
+/*module IR_tb();
 reg clk, loadIR;
 reg [5:0] inop;
 wire [5:0] opcode;
@@ -44,4 +39,4 @@ initial begin
 #100
   loadIR=1;
 end
-endmodule
+endmodule*/
