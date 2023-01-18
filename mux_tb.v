@@ -4,8 +4,9 @@ module mux_tb();
   reg [3:0] cf;           
   reg [3:0] of;
   reg [1:0] sel;        
-  wire [3:0] out;
+  wire [3:0] jmp;
 
+mux uut( .zf(zf), .nf(nf), .cf(cf), .of(of), .sel(sel), .jmp(jmp));
 localparam CLK_PERIOD = 100;  
 initial begin
   zf=4'b0001;
