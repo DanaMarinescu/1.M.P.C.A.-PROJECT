@@ -7,7 +7,7 @@ module CU
   
   output reg [7:0] control_signals); // next, br/oth, aluOp, lse, ldm, lacc, abs, spo
   
-  always @(posedge opCode or posedge rst)begin
+  always @(opCode or posedge rst)begin
     if(rst)begin
       control_signals <= 6'b000000;
     end
