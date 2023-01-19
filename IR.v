@@ -16,32 +16,47 @@ end
 
 endmodule
 
-/*module IR_tb();
-reg clk, loadIR;
+module IR_tb();
+reg clk, rst;
 reg [5:0] inop;
 wire [5:0] opcode;
 IR cut(
   .clk(clk),
-  .loadIR(loadIR),
+  .rst(rst),
   .inop(inop),
   .opcode(opcode)
 );
 
+localparam CLK_PERIOD = 100;
+localparam RUNNING_CYCLES = 100;
 initial begin
-  clk=0;
-  loadIR=0;
-  inop=0;
-  
-  #10
-  
-  clk=1;
-  forever #30  clk = ~clk;
+  clk = 0;
+  repeat (2*RUNNING_CYCLES) begin
+    #(CLK_PERIOD/2) ;
+    clk = ~clk;
   end
-initial begin
-#100
-  loadIR=0;
-  inop=6'b110;
-#100
-  loadIR=1;
 end
-endmodule*/
+  
+localparam RST_DURATION = 25;
+initial begin
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+  
+initial
+begin
+  inop=0;
+end
+
+initial begin
+  #(1*CLK_PERIOD) ;
+  inop=6'b011110;
+  #(1*CLK_PERIOD) ;
+  rst = 1;
+  inop=6'b101001;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+
+endmodule

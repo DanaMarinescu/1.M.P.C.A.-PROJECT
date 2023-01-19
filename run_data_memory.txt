@@ -7,7 +7,7 @@ set sourcefiles {data_memory.v }
 # set name of the top module in variable topmodule
 # Example:-----------------------------------------
 # set topmodule mux2s_tb
-set topmodule tb_datamem
+set topmodule tb_data_memory
 
 ###################################################
 #####DO NOT MODIFY THE SCRIPT BELLOW THIS LINE#####

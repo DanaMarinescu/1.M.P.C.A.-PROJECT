@@ -27,10 +27,11 @@ endmodule
 
 module Sign_Extension_9bit_tb;
 reg clk;
+reg rst;
 reg [8:0]data_in;
 wire [15:0] data_out;
 
-Sign_Extension_9bit se9b( .clk(clk), .data_in(data_in), .data_out(data_out));
+Sign_Extension_9bit se9b( .clk(clk), .rst(rst), .data_in(data_in), .data_out(data_out));
 
 localparam CLK_PERIOD = 100;
   localparam RUNNING_CYCLES = 10;
@@ -38,6 +39,13 @@ localparam CLK_PERIOD = 100;
     clk = 0;
     repeat (2*RUNNING_CYCLES) #(CLK_PERIOD/2) clk = ~clk;
   end
+  
+localparam RST_DURATION = 25;
+initial begin
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
+end
 
 initial begin
   data_in = 10'b0000000000;

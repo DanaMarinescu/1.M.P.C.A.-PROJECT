@@ -24,27 +24,53 @@ else begin
   end
 end
 endmodule
-/*
+
 module demux_tb;
   reg sel;
-  reg [9:0] i;
+  reg [9:0] in;
+  reg clk;
+  reg rst;
   
   wire [9:0] y;
   wire [9:0] x;
   demux uut (
+    .clk(clk),
+    .rst(rst),
+    .x(x),
     .y(y),
-    .sel(sel),
-    .i(i),
-    .x(x)
-  
+    .in(in),
+    .sel(sel)
   );
+  
+localparam CLK_PERIOD = 100;
+localparam RUNNING_CYCLES = 100;
+initial begin
+  clk = 0;
+  repeat (2*RUNNING_CYCLES) begin
+    #(CLK_PERIOD/2) ;
+    clk = ~clk;
+  end
+end
+  
+localparam RST_DURATION = 25;
+initial begin
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+  
   
   initial begin 
     sel=0;
-    i=1;
+    in=1;
   end 
-  always #2 sel=sel+1'b1;
+  
+  initial begin 
+    repeat (30) begin
+      #(CLK_PERIOD/2) ;
+      sel=sel+1'b1;
+    end
+  end
   
   
 endmodule
-*/

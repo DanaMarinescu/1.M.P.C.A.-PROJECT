@@ -15,32 +15,47 @@ end
 end
 endmodule
 
-/*module AR_tb();
-reg clk, loadAR;
-reg [9:0] inard;
-wire [9:0] address;
+module AR_tb();
+reg clk, rst;
+reg [9:0] inop;
+wire [9:0] opcode;
 AR cut(
   .clk(clk),
-  .loadAR(loadAR),
-  .inard(inard),
-  .address(address)
+  .rst(rst),
+  .inop(inop),
+  .opcode(opcode)
 );
 
+localparam CLK_PERIOD = 100;
+localparam RUNNING_CYCLES = 100;
 initial begin
-  clk=0;
-  loadAR=0;
-  inard=0;
-  
-  #10
-  
-  clk=1;
-  forever #30  clk = ~clk;
+  clk = 0;
+  repeat (2*RUNNING_CYCLES) begin
+    #(CLK_PERIOD/2) ;
+    clk = ~clk;
   end
-initial begin
-#100
-  loadAR=0;
-  inard=6'b110;
-#100
-  loadAR=1;
 end
-endmodule*/
+  
+localparam RST_DURATION = 25;
+initial begin
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+  
+initial
+begin
+  inop=0;
+end
+
+initial begin
+  #(1*CLK_PERIOD) ;
+  inop=6'b110;
+  #(1*CLK_PERIOD) ;
+  rst = 1;
+  inop=6'b100;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+
+endmodule

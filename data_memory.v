@@ -20,73 +20,56 @@ begin
 end
 endmodule
 
-/* // old code
-module datamem(clk, we_DM, dataDM, addDM, outDM);
-input clk;
-input we_DM;
-input [15:0] dataDM;
-input [15:0] addDM;
-output [15:0] outDM;
-
-
-
-reg [15:0] out_DM_reg, out_DM_next,addDM_reg,addDM_next;
-// Memory is an array stored at particular address
-
-reg [15:0] mem [0 : 15];
-
-assign outDM= out_DM_reg;
-
-always@(posedge clk)
-begin
-	out_DM_reg<=out_DM_next;
-end
-
-always@(*)
-begin
-  
-  if (we_DM == 1) begin
-	mem[addDM] = dataDM;
-	
-	end
-	
-	else if (we_DM == 0) begin
-	   out_DM_next= mem[addDM];
-	end
-end
-endmodule
-*/
-/*module tb_datamem();
+module tb_data_memory();
+reg clk;
 reg we_DM;
 reg [15:0] dataDM;
 reg [15:0] addrDM;
 wire [15:0] outDM;
 
 
-datamem d1 (.we_DM(we_DM), .dataDM(dataDM), .addrDM(addrDM), .outDM(outDM));
+data_memory d1 (.clk(clk), .we_DM(we_DM), .dataDM(dataDM), .addrDM(addrDM), .outDM(outDM));
+
+localparam CLK_PERIOD = 100;
+localparam RUNNING_CYCLES = 100;
+initial begin
+  clk = 0;
+  repeat (2*RUNNING_CYCLES) begin
+    #(CLK_PERIOD/2) ;
+    clk = ~clk;
+  end
+end
 
 initial
 begin
-	clk <= 0;
-	we_DM <= 0;
+	we_DM <= 1;
 	dataDM <= 16'h00000000;
 	addrDM <= 16'h000;
 end
-always #5 clk = ~clk;
-always #60 addDM = addDM + 16'h001;
+
 initial 
 begin
-	#5 we_DM <= 1;
-	#4 dataDM <= 16'h1dfe;
-	#20 we_DM <= 0;
+   #(1*CLK_PERIOD) ;
+	 we_DM <= 0;
+	 addrDM = addrDM + 16'h001;
+	 dataDM <= 16'h1dfe;
+	 #(1*CLK_PERIOD) ;
+	 we_DM <= 1;
 
-	#20 we_DM <= 1;
-	#4 dataDM <= 16'h1001;
-	#20 we_DM <= 0;
-	
-	#100;
-	#20 we_DM <= 1;
-	#4 dataDM <= 16'ha001;
-	#20 we_DM <= 0;
+   #(1*CLK_PERIOD) ;
+	 we_DM <= 0;
+	 addrDM = addrDM + 16'h001;
+	 dataDM <= 16'h1001;
+	 #(1*CLK_PERIOD) ;
+	 we_DM <= 1;
+	 
+	 #(1*CLK_PERIOD) ;
+	 we_DM <= 0;
+	 addrDM = addrDM + 16'h001;
+	 dataDM <= 16'ha001;
+	 #(1*CLK_PERIOD) ;
+	 we_DM <= 1;
 end
-endmodule*/
+
+
+endmodule

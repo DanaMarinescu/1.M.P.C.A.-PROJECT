@@ -107,12 +107,14 @@ end
 endmodule
 
 
-/*
 module ALU_unit_tb();
+reg clk;
+reg rst;
 reg [15:0] a;
 reg [15:0] b;
 reg [5:0] opcode;
-wire [15:0] result;
+reg aluOp;
+wire [16:0] result;
 wire ZF;
 wire CF;
 wire NF; 
@@ -121,39 +123,77 @@ wire OF;
 
 // Instantiation of ALU
 
-ALU_unit d1 (.a(a), .b(b), .opcode(opcode), .result(result), .ZF(ZF), .CF(CF), .NF(NF), .OF(OF));
+ALU_unit d1 (.clk(clk), .rst(rst), .a(a), .b(b), .opcode(opcode), .result(result), .ZF(ZF), .CF(CF), .NF(NF), .OF(OF), .aluOp(aluOp));
 
 // Initialization
+localparam CLK_PERIOD = 100;
+localparam RUNNING_CYCLES = 100;
+initial begin
+  clk = 0;
+  repeat (2*RUNNING_CYCLES) begin
+    #(CLK_PERIOD/2) ;
+    clk = ~clk;
+  end
+end
+  
+localparam RST_DURATION = 25;
+initial begin
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+  
 initial
 begin
+  aluOp <= 1'b1;
 	a <= 16'h0000;
 	b <= 16'h0000;
-	opcode <= 6'b000000;
+	opcode = 6'b000000;
 end
 
 initial
 begin
-	#5 a = 16'h0011;
-	#5 b = 16'h0002;
+  #(1*CLK_PERIOD) ;
+	a = 16'h0011;
+	#(1*CLK_PERIOD) ;
+	b = 16'h0002;
 
-	#5 opcode = 6'b001001;
-	#5 opcode = 6'b001010;
-	#5 opcode = 6'b001011;
-	#5 opcode = 6'b001100;
-	#5 opcode = 6'b001101;
-	#5 opcode = 6'b001110;
-  #5 opcode = 6'b001111;
-  #5 opcode = 6'b010000; 
-  #5 opcode = 6'b010001;
-  #5 opcode = 6'b010010;
-  #5 opcode = 6'b010011;
-  #5 opcode = 6'b010100;
-  #5 opcode = 6'b010101;
-  #5 opcode = 6'b010110;
-  #5 opcode = 6'b010111;
-  #5 opcode = 6'b011000;
-  #5 opcode = 6'b011001;
-  #5 opcode = 6'b011010;
+  #(1*CLK_PERIOD) ;
+	opcode = 6'b001001;
+	#(1*CLK_PERIOD) ;
+	opcode = 6'b001010;
+	#(1*CLK_PERIOD) ;
+	opcode = 6'b001011;
+	#(1*CLK_PERIOD) ;
+	opcode = 6'b001100;
+	#(1*CLK_PERIOD) ;
+	opcode = 6'b001101;
+	#(1*CLK_PERIOD) ;
+	opcode = 6'b001110;
+	#(1*CLK_PERIOD) ;
+  opcode = 6'b001111;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010000; 
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010001;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010010;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010011;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010100;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010101;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010110;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b010111;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b011000;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b011001;
+  #(1*CLK_PERIOD) ;
+  opcode = 6'b011010;
   
 end
-endmodule*/
+endmodule

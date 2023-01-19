@@ -27,13 +27,14 @@ endmodule
 
 
 /*****Stack_pointer_tb*****/
-/*
-module Stack_pointer_tb;
-reg clk, loadSP;
-reg [15:0] insp;
-wire [15:0] address;
 
-Stack_pointer SP( .clk(clk), .loadSP(loadSP), .insp(insp), .address(address));
+module Stack_pointer_tb;
+reg clk, rst, enable;
+reg [5:0] opcode;
+reg [15:0] pc;
+wire [15:0] sp_out;
+
+Stack_pointer SP( .clk(clk), .rst(rst), .enable(enable), .opcode(opcode), .pc(pc), .sp_out(sp_out));
 
 localparam CLK_PERIOD = 100;
   localparam RUNNING_CYCLES = 10;
@@ -42,27 +43,31 @@ localparam CLK_PERIOD = 100;
     repeat (2*RUNNING_CYCLES) #(CLK_PERIOD/2) clk = ~clk;
   end
 
+localparam RST_DURATION = 25;
 initial begin
-  insp = 16'h0000;
-  loadSP = 1'b0;
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
 end
 
 initial begin
-  insp = 16'ha42f;
-  loadSP = 1'b1;
-  
-  #200
-  insp = 16'h9bc2;
-  loadSP = 1'b0;
-  
-  #100
-  insp = 16'h7d10;
-  loadSP = 1'b1;
-  
-  #100
-  insp = 16'h22e4;
-  loadSP = 1'b1;
-  
+  enable = 0;
+  opcode = 6'b000000;
+  pc = 16'h0000;
+  end
+
+initial begin
+  #(1*CLK_PERIOD) ;
+  enable = 1;
+  opcode = 6'b000101;
+  pc = 16'h0001;
+  #(1*CLK_PERIOD) ;
+  enable = 1;
+  opcode = 6'b000100;
+  pc = 16'h0001;
+  #(1*CLK_PERIOD) ;
+  enable = 1;
+  opcode = 6'b000100;
+  pc = 16'h0001;
 end
 endmodule
-*/

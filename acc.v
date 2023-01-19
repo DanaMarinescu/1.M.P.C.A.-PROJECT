@@ -15,24 +15,41 @@ always @ (posedge rst, in)begin
 end
 endmodule
 
-/*
 module acc_tb;
-reg [15:0] in;
 reg clk;
-reg reset;
+reg rst;
+reg [15:0] in;
 wire [15:0] acc;
 
-acc uut ( .in(in), .acc(acc), .clk(clk), .reset(reset) );
+acc uut ( .clk(clk), .rst(rst), .in(in), .acc(acc));
 
+localparam CLK_PERIOD = 100;
+localparam RUNNING_CYCLES = 100;
 initial begin
-  #5 reset<=1'b1;
-  #5 reset<=1'b0;
-  clk =1'b0;
-  in = 16'b0000000000000001;
-  #50 in = 16'b0000000000000010;
-  #50 in = 16'b0000000000000011;
+  clk = 0;
+  repeat (2*RUNNING_CYCLES) begin
+    #(CLK_PERIOD/2) ;
+    clk = ~clk;
+  end
 end
-  always #10 clk = ~clk;
-  initial#180 $stop;
+  
+localparam RST_DURATION = 25;
+initial begin
+  rst = 1;
+  #(RST_DURATION) ;
+  rst = 0;
+end
+  
+initial begin
+  in = 16'b0000000000000001;
+  #(1*CLK_PERIOD) ;
+  in=16'b0000000000000010;
+  #(1*CLK_PERIOD) ;
+  rst = 1;
+  in=16'b0000000000000011;
+  #(RST_DURATION) ;
+  rst = 0;
+  in=16'b0000000000000100;
+end
+
 endmodule
-*/
