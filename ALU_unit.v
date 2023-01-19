@@ -11,7 +11,7 @@ input clk,rst,
  input aluOp
     );
 
-always @(a, b, posedge rst)
+always @(a, b, opcode, posedge rst)
 begin 
   if(rst) begin
     result<=17'd0;
@@ -113,12 +113,12 @@ reg rst;
 reg [15:0] a;
 reg [15:0] b;
 reg [5:0] opcode;
-reg aluOp;
 wire [16:0] result;
 wire ZF;
 wire CF;
 wire NF; 
 wire OF;
+reg aluOp;
 
 
 // Instantiation of ALU
@@ -145,7 +145,7 @@ end
   
 initial
 begin
-  aluOp <= 1'b1;
+  aluOp <= 1'b0;
 	a <= 16'h0000;
 	b <= 16'h0000;
 	opcode = 6'b000000;
@@ -155,8 +155,8 @@ initial
 begin
   #(1*CLK_PERIOD) ;
 	a = 16'h0011;
-	#(1*CLK_PERIOD) ;
 	b = 16'h0002;
+	aluOp <= 1'b1;
 
   #(1*CLK_PERIOD) ;
 	opcode = 6'b001001;
