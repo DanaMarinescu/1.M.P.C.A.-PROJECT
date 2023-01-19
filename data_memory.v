@@ -1,5 +1,6 @@
 `timescale 1ns / 1ns
 module data_memory(
+input clk,
 input we_DM,
   input [15:0] dataDM,
   input [15:0] addrDM,
@@ -7,7 +8,7 @@ input we_DM,
   
   reg [15:0] mem [0 : 1023];
 
-  always@(posedge dataDM, posedge addrDM,posedge we_DM,negedge we_DM)
+  always@(posedge dataDM, posedge addrDM,posedge we_DM,negedge we_DM, posedge clk)
 begin
   
   if (we_DM == 1) begin

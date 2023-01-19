@@ -1,12 +1,12 @@
 `timescale 1ns / 1ns
 
-module mux (zf, nf, cf, of, sel, jmp, enable); 
-  input   zf, nf, cf, of; 
+module mux (zf, nf, cf, of, clk, sel, jmp, enable); 
+  input   zf, nf, cf, of,clk; 
   input  [1:0] sel;
   input enable; 
   output reg jmp;  
  
-  always @(zf or nf or cf or of or sel) 
+  always @(zf or nf or cf or of or sel or posedge clk) 
   begin 
     if(enable)begin
     case (sel) 

@@ -3,15 +3,15 @@
 module CU
 (
   input [5:0] opCode,
-  input rst,
+  input rst,clk,
   
   output reg [7:0] control_signals); // next, br/oth, aluOp, lse, ldm, lacc, abs, spo
   
-  always @(opCode or posedge rst)begin
+  always @(opCode, posedge rst)begin
     if(rst)begin
       control_signals <= 6'b000000;
     end
-      
+  else begin
       case(opCode)
         
         //brz
@@ -151,9 +151,9 @@ module CU
         
         default control_signals <= 8'b11111111;
         
-        
-      endcase
       
+      endcase
+  end
   end
 
 endmodule

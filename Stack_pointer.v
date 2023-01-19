@@ -1,4 +1,5 @@
 module Stack_pointer(
+input clk,rst,
 input enable,
 input [5:0] opcode,
 input [15:0] pc,
@@ -7,7 +8,11 @@ output reg [15:0] sp_out
 
 reg [5:0]sp_reg;
 
-always @ (*)begin
+always @ (posedge rst, posedge clk)begin
+  if(rst) begin
+    sp_reg<=16'd0;
+end
+else begin
   if(enable)begin
     if(opcode&&6'b000101)begin //store
      sp_reg<=pc;
@@ -15,6 +20,7 @@ always @ (*)begin
               sp_out<= sp_reg;
              end
   end
+end
 end
 endmodule
 

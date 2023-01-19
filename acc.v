@@ -1,11 +1,17 @@
-module acc(in, acc);
+module acc(clk,rst, in, acc);
+input clk, rst;
 input [15:0] in;
 output [15:0] acc;
 reg [15:0] acc_reg;
 
 assign acc=acc_reg;
-always @ (in)begin
-  acc_reg<=in;
+always @ (posedge rst, in)begin
+  if(rst) begin
+    acc_reg<=16'd0;
+  end
+  else begin
+    acc_reg<=in;
+  end
 end
 endmodule
 

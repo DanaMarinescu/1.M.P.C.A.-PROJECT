@@ -1,8 +1,8 @@
 module ALU_unit(
+input clk,rst,
  input  [15:0] a,
  input  [15:0] b,
  input  [5:0] opcode, 
- 
  output reg [16:0] result,
  output reg ZF,
  output reg CF,
@@ -11,8 +11,16 @@ module ALU_unit(
  input aluOp
     );
 
-always @(*)
+always @(a, b, posedge rst)
 begin 
+  if(rst) begin
+    result<=17'd0;
+    ZF = 1'b0;
+    CF = 1'b0;
+  NF = 1'b0;
+  OF = 1'b0;
+end
+else begin
   if(aluOp) begin
     
   CF = 1'b0;
@@ -95,7 +103,7 @@ begin
  ZF = (result==16'd0) ? 1'b1: 1'b0;
  end
 end
-
+end
 endmodule
 
 

@@ -21,37 +21,48 @@ module Processor_tb();
                           .pc_out(pc_addr_out)
                           );
                           
-  PC_adder pc_adder_unit( .next(control_signals[7]),
+  PC_adder pc_adder_unit( .clk(clk),
+                          .rst(rst),
+                          .next(control_signals[7]),
                           .addr_in(pc_addr_out),
                           .addr_out(pc_next)
                           );
                           
-  instruction_memory instr_memory_unit( .rst(rst),
+  instruction_memory instr_memory_unit( .clk(clk),
+                                        .rst(rst),
                                         .addr(pc_addr_out),
                                         .instruction(instruction_out)
                                         );
                                         
-  IR ir_reg(.inop(instruction_out[15:10]),
+  IR ir_reg(.clk(clk),
+            .rst(rst),
+            .inop(instruction_out[15:10]),
             .opcode(ir_out)
             );
             
-  AR ar_reg(.inop(instruction_out[9:0]),
+  AR ar_reg(.clk(clk),
+            .rst(rst),
+            .inop(instruction_out[9:0]),
             .opcode(ar_out)
             );
 
-  demux demux_br_other( .x(ar_demux_br_out),
+  demux demux_br_other( .clk(clk),
+                        .rst(rst),
+                        .x(ar_demux_br_out),
                         .y(ar_demux_other_out),
                         .in(ar_out),
                         .sel(control_signals[6])
                         );
             
   Sign_Extension_10bit sgn_ext_10bit_unit( .clk(clk),
+                                           .rst(rst),
                                            .data_in(ar_demux_br_out),
                                            .data_out(sgn_ext_br_out)          
                                         );
                                         
   CU control_unit( .opCode(ir_out),
                    .rst(rst),
+                   .clk(clk),
                    .control_signals(control_signals)
                    );
   
@@ -68,11 +79,14 @@ module Processor_tb();
                                );
                                 
   Sign_Extension_9bit sgn_ext_9bit_unit(   .clk(clk),
+                                            .rst(rst),
                                            .data_in(ar_demux_other_out[8:0]),
                                            .data_out(sgn_ext_other_out)          
                                         ); 
                                         
-  ALU_unit ALU_unit(.a(reg_file_out),
+  ALU_unit ALU_unit(.clk(clk),
+                    .rst(rst),
+                    .a(reg_file_out),
                     .b(sgn_ext_other_out),
                     .opcode(ir_out), 
                     .result(alu_out),
@@ -87,6 +101,8 @@ module Processor_tb();
                                  .nf(NF),
                                  .cf(CF),
                                  .of(OF),
+                                 .clk(clk),
+                                 .rst(rst),
                                  .flags(flags_reg)
                                 );
   
@@ -94,28 +110,36 @@ module Processor_tb();
                      .nf(flags_reg[2]),
                      .cf(flags_reg[1]),
                      .of(flags_reg[0]),
+                     .clk(clk),
                      .sel(ir_out[1:0]),
                      .jmp(jmp),
                      .enable(control_signals[6])
                      );                                                                   
                            
-  acc ACC_reg( .in(alu_out[15:0]),
-               .acc(acc_out)
-               );   
+  acc ACC_reg(  .clk(clk),
+                .rst(rst),
+                .in(alu_out[15:0]),
+                .acc(acc_out)
+                );   
                
-  data_memory data_memory_unit( .we_DM((ir_out&&6'b000101)||(!(ir_out&&6'b000100))),
+  data_memory data_memory_unit( .clk(clk),
+                                .we_DM((ir_out&&6'b000101)||(!(ir_out&&6'b000100))),
                                 .dataDM(reg_file_out),
                                 .addrDM(sgn_ext_other_out),
                                 .outDM(data_mem_out)
                                 );
                                 
-  mux2to1 sp_or_br_mux_unit( .br(sgn_ext_br_out),
+  mux2to1 sp_or_br_mux_unit( .clk(clk),
+                              .rst(rst),
+                	            .br(sgn_ext_br_out),
                              .sp(sp_to_mux),
                              .sel(control_signals[0]),
                              .out(mux_to_pc_write)
                              );                              
   
-  Stack_pointer sp_unit( .enable(control_signals[0]),
+  Stack_pointer sp_unit( .clk(clk),
+                          .rst(rst),
+        	     	 	 	      .enable(control_signals[0]),
                          .opcode(ir_out),
                          .pc(pc_addr_out),
                          .sp_out(sp_to_mux)
@@ -124,11 +148,13 @@ module Processor_tb();
    //  testing
     initial begin
     clk = 1'b0;
-    forever #100 clk=!clk;
+    repeat (500) begin
+      #100 clk=!clk;
+  end
   end 
   initial begin
         rst = 1'b1;
 	 #120 rst=1'b0;
-	 #2000;
+	 #8000;
    end                                                        
   endmodule

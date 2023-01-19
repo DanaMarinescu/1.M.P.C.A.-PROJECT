@@ -1,10 +1,16 @@
-module demux (x,y,in, sel);
+module demux (clk,rst,x,y,in, sel);
+input clk,rst;
 output reg [9:0] y;
 output reg [9:0] x;
 input [9:0] in;
 input sel;
 
-always @(*) begin 
+always @(posedge clk, posedge rst) begin 
+  if(rst) begin
+    x<=10'd0;
+    y<=10'd0;
+  end
+else begin
   if(sel==1'b0)
     begin 
       y =in;
@@ -16,6 +22,7 @@ always @(*) begin
       y =10'b0;
     end
   end
+end
 endmodule
 /*
 module demux_tb;

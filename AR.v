@@ -1,12 +1,17 @@
-module AR(inop, opcode);
-  
+module AR(clk,rst,inop, opcode);
+input clk,rst;
 input [9:0] inop;
 output [9:0] opcode;
 reg [9:0]AR_reg;
 
 assign opcode=AR_reg;
-always @ (inop)begin
+always @ (posedge rst, posedge clk)begin
+  if(rst) begin
+    AR_reg<=10'd0;
+end 
+else begin
   AR_reg<=inop;
+end
 end
 endmodule
 

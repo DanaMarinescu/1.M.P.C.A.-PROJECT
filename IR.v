@@ -1,12 +1,17 @@
-module IR(inop, opcode);
-  
+module IR(clk,rst,inop, opcode);
+input clk,rst;
 input [5:0] inop;
 output [5:0] opcode;
 reg [5:0]IR_reg;
 
 assign opcode=IR_reg;
-always @ (inop)begin
+always @ (posedge rst, posedge clk)begin
+  if(rst) begin
+    IR_reg<=6'd0;
+  end 
+  else begin
   IR_reg<=inop;
+end
 end
 
 endmodule

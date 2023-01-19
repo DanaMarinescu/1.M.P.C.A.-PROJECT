@@ -12,8 +12,14 @@ module reg_file(
 );
 reg [15:0] x;
 reg [15:0] y;
-    always @(posedge clk or negedge rst)
+    always @(posedge clk, posedge rst)
     begin
+      if(rst) begin
+        out=16'd0;
+        x<=16'd0;
+        y<=16'd0;
+    end 
+    else begin
         if (lacc) begin
           if(!rw) begin
             x<= acc;
@@ -44,6 +50,7 @@ reg [15:0] y;
         else begin
          out<=y;
         end
+    end
     end
 endmodule
 

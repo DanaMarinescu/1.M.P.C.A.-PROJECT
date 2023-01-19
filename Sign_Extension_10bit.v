@@ -1,12 +1,16 @@
 `timescale 1ns / 1ns
 
 module Sign_Extension_10bit(
-  input clk,
+  input clk,rst, 
   input [9:0]data_in,
   output reg [15:0] data_out
 );
 
-always @(posedge clk) begin
+always @(posedge rst,posedge clk) begin
+  if(rst) begin
+    data_out<=16'b0;
+end 
+else begin
   if ( data_in[8] == 1'b1)begin
    data_out<={6'b111111,data_in};
     end else if ( data_in[8] == 1'b0) begin
@@ -14,6 +18,7 @@ always @(posedge clk) begin
       end else begin
         data_out<=data_in;
   end
+end
 end
 endmodule
 
